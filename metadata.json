@@ -1,0 +1,6 @@
+{
+  "name": "Észak-Európa Viking Földrajzi Kvíz",
+  "description": "7. osztályos földrajz gyakorló feladat Észak-Európa 5 országáról viking és troll hangulatban, repülővel behúzott kártyákkal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

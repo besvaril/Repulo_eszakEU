@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-viking: 'Cinzel', serif;
+    --font-rune: 'MedievalSharp', cursive;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --bg-main: #121417;
+    --bg-surface: #1c1e22;
+    --bg-darker: #0a0b0d;
+    --border-dark: #2c241d;
+    --border-subtle: #3d3329;
+    --gold-primary: #c9a86a;
+    --gold-light: #d4b984;
+    --gold-dark: #8e7345;
+    --text-primary: #e0d7cc;
+    --text-muted: #8e8e8e;
+  }
+}
+
+.font-viking {
+  font-family: 'Cinzel', serif;
+}
+
+.font-rune {
+  font-family: 'MedievalSharp', cursive;
+}
+
+.font-body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Custom Sophisticated Dark Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0b0d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2c241d;
+  border: 1px solid #3d3329;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3d3329;
+  border-color: #c9a86a;
+}
+
+/* Atmospheric Glows & Animations */
+@keyframes aurora {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1) translateY(0px) rotate(0deg);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.05) translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-aurora {
+  animation: aurora 14s ease-in-out infinite alternate;
+}
+
+@keyframes gold-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(201, 168, 106, 0.25);
+    border-color: rgba(201, 168, 106, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(201, 168, 106, 0.65);
+    border-color: rgba(201, 168, 106, 1);
+  }
+}
+
+.animate-gold-pulse {
+  animation: gold-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes propeller-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.animate-propeller {
+  animation: propeller-spin 0.2s linear infinite;
+}
+
+@keyframes rune-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(201, 168, 106, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(201, 168, 106, 0.85));
+  }
+}
+
+.animate-rune-glow {
+  animation: rune-glow 2.5s ease-in-out infinite;
+}
+
