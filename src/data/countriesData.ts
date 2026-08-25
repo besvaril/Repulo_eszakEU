@@ -25,15 +25,15 @@ export const ALL_CARD_ITEMS: CardItem[] = [
     curriculumFact: 'A LEGO név a dán „leg godt” (játssz jól) kifejezésből ered. Ole Kirk Christiansen asztalosmester alapította 1932-ben.'
   },
   {
-    id: 'dk-flag',
+    id: 'dk-jylland',
     countryId: 'dk',
-    title: 'Dánia zászlaja',
-    category: 'culture',
-    categoryLabel: 'Nemzeti szimbólum',
-    iconName: 'Flag',
-    visualEmoji: '🇩🇰',
-    description: 'A Dannebrog a világ legrégebbi, ma is folyamatosan használt állami zászlója.',
-    curriculumFact: 'A legenda szerint 1219-ben az égből hullott alá a lindi csatában. Ez szolgált mintaként az összes skandináv keresztzászlóhoz.'
+    title: 'Jylland-félsziget',
+    category: 'geography',
+    categoryLabel: 'Felszínforma',
+    iconName: 'MapPin',
+    visualEmoji: '🗺️',
+    description: 'Dánia szárazföldi részét alkotó nagy félsziget az Északi- és a Balti-tenger között.',
+    curriculumFact: 'A Jylland-félsziget (Jütland) alkotja Dánia területének zömét és egyetlen szárazföldi határát (Németországgal). Morénákkal és parti dűnékkel tagolt sík vidék.'
   },
   {
     id: 'dk-greenland',

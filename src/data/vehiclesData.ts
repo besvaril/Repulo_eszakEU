@@ -1,4 +1,4 @@
-import airplaneImg from '../assets/images/blue_airplane_1787675007051.jpg';
+import airplaneImg from '../assets/images/blue_jet_airplane_1787676572236.jpg';
 import shipImg from '../assets/images/viking_ship_1787675022026.jpg';
 import balloonImg from '../assets/images/hot_air_balloon_1787675037916.jpg';
 

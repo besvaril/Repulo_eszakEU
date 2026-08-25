@@ -100,6 +100,9 @@ export default function App() {
     setHasStartedGame(true);
     setStartTime(Date.now());
 
+    // Start atmospheric Nordic background music: Vargsången (The Wolf Song)
+    soundEngine.startWolfSongMusic();
+
     const vehicleObj = VEHICLES[veh];
     setMascotMessage({
       speaker: 'viking',

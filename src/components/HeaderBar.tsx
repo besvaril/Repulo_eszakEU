@@ -111,7 +111,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
                   ? 'bg-[#121417] border-[#3d3329] text-[#8e8e8e] hover:text-[#e0d7cc]'
                   : 'bg-[#2c241d] border-[#8e7345] text-[#c9a86a] hover:bg-[#3d3329]'
               }`}
-              title={isMuted ? 'Hang bekapcsolása' : 'Hang némítása'}
+              title={isMuted ? 'Zene és hangok bekapcsolása (Vargsången - The Wolf Song)' : 'Zene és hangok némítása (Vargsången - The Wolf Song)'}
               aria-label="Hangbeállítás"
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
