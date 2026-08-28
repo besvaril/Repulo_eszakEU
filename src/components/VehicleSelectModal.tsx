@@ -6,23 +6,31 @@ import { Check, Compass, Sparkles, Shield, Play } from 'lucide-react';
 interface VehicleSelectModalProps {
   isOpen: boolean;
   selectedVehicle: VehicleType;
+  captainName?: string;
+  captainSquad?: string;
+  captainAvatar?: string;
   onSelectVehicle: (vehicle: VehicleType) => void;
   onStartGame: () => void;
+  onBackToEntry?: () => void;
   isInitialStart?: boolean;
 }
 
 export const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   isOpen,
   selectedVehicle,
+  captainName,
+  captainSquad,
+  captainAvatar = '🛡️',
   onSelectVehicle,
   onStartGame,
+  onBackToEntry,
   isInitialStart = false,
 }) => {
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -32,9 +40,19 @@ export const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
         >
           {/* Header Banner */}
           <div className="bg-gradient-to-b from-[#2c241d] to-[#1c1e22] p-5 sm:p-6 border-b border-[#3d3329] text-center relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#121417] border border-[#c9a86a]/40 rounded-full text-xs text-[#c9a86a] font-viking tracking-widest uppercase mb-2">
-              <Compass className="w-3.5 h-3.5 text-[#c9a86a] animate-spin" />
-              <span>Északi Expedíciós Járműválasztó</span>
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#121417] border border-[#c9a86a]/40 rounded-full text-xs text-[#c9a86a] font-viking tracking-widest uppercase">
+                <Compass className="w-3.5 h-3.5 text-[#c9a86a] animate-spin" />
+                <span>2. Lépés: Északi Járműválasztó</span>
+              </div>
+
+              {captainName && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#121417] border border-[#3d3329] rounded-full text-xs text-[#e0d7cc] font-sans">
+                  <span>{captainAvatar}</span>
+                  <span className="font-bold text-[#c9a86a]">{captainName}</span>
+                  {captainSquad && <span className="text-[#8e8e8e]">({captainSquad})</span>}
+                </div>
+              )}
             </div>
 
             <h2 className="text-xl sm:text-2xl font-viking font-extrabold text-[#c9a86a] tracking-wide uppercase">
@@ -139,14 +157,26 @@ export const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
 
           {/* Footer Action Bar */}
           <div className="bg-[#121417] p-4 sm:p-5 border-t border-[#3d3329] flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-[#8e8e8e]">
-              <Shield className="w-4 h-4 text-[#c9a86a]" />
-              <span>
-                Aktuális választás:{' '}
-                <strong className="text-[#c9a86a]">
-                  {VEHICLES[selectedVehicle].name}
-                </strong>
-              </span>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+              {onBackToEntry && (
+                <button
+                  type="button"
+                  onClick={onBackToEntry}
+                  className="px-3.5 py-2 rounded-xl bg-[#1c1e22] hover:bg-[#2c241d] border border-[#3d3329] text-xs font-bold text-[#8e8e8e] hover:text-[#c9a86a] transition-all cursor-pointer"
+                >
+                  ← Vissza a belépéshez
+                </button>
+              )}
+
+              <div className="flex items-center gap-2 text-xs text-[#8e8e8e]">
+                <Shield className="w-4 h-4 text-[#c9a86a]" />
+                <span className="hidden sm:inline">
+                  Választás:{' '}
+                  <strong className="text-[#c9a86a]">
+                    {VEHICLES[selectedVehicle].name}
+                  </strong>
+                </span>
+              </div>
             </div>
 
             <button

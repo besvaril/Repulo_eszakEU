@@ -248,7 +248,7 @@ export const COUNTRIES: Record<CountryId, CountryInfo> = {
     // Realistic SVG path for Denmark (Jutland peninsula + Funen + Zealand)
     svgPath: 'M 430,680 L 440,650 L 435,610 L 445,580 L 435,560 L 440,540 L 455,545 L 460,565 L 452,600 L 465,640 L 458,680 Z M 480,640 C 490,635 500,645 495,655 C 485,660 475,650 480,640 Z M 510,620 C 525,615 535,630 530,645 C 515,655 500,640 510,620 Z M 545,635 C 555,635 560,645 550,650 C 540,645 540,635 545,635 Z',
     labelPos: { x: 460, y: 625 },
-    badgePos: { x: 445, y: 710 },
+    badgePos: { x: 375, y: 675 },
     bounds: { minX: 420, minY: 535, maxX: 565, maxY: 690 },
     items: ALL_CARD_ITEMS.filter(item => item.countryId === 'dk')
   },
@@ -286,7 +286,7 @@ export const COUNTRIES: Record<CountryId, CountryInfo> = {
     // Realistic SVG path for Sweden (Gulf of Bothnia, Baltic coast, Skåne, Gotland)
     svgPath: 'M 480,480 L 490,410 L 500,350 L 530,285 L 570,225 L 630,165 L 690,135 L 675,170 L 645,240 L 620,310 L 600,380 L 590,450 L 585,520 L 565,580 L 525,600 L 495,570 L 480,520 Z M 610,510 C 620,500 625,525 615,545 C 605,550 600,530 610,510 Z M 590,535 C 596,528 600,545 595,555 C 590,555 588,542 590,535 Z',
     labelPos: { x: 545, y: 420 },
-    badgePos: { x: 580, y: 320 },
+    badgePos: { x: 575, y: 310 },
     bounds: { minX: 475, minY: 130, maxX: 695, maxY: 605 },
     items: ALL_CARD_ITEMS.filter(item => item.countryId === 'se')
   },
@@ -305,7 +305,7 @@ export const COUNTRIES: Record<CountryId, CountryInfo> = {
     // Realistic SVG path for Finland (Bothnia coast, Saimaa lakes, Lapland)
     svgPath: 'M 675,170 L 690,135 L 735,120 L 775,150 L 780,210 L 760,280 L 765,350 L 755,420 L 730,470 L 670,480 L 645,465 L 635,420 L 625,350 L 645,240 Z M 605,475 C 612,470 620,478 615,488 C 608,490 602,482 605,475 Z',
     labelPos: { x: 700, y: 320 },
-    badgePos: { x: 770, y: 260 },
+    badgePos: { x: 740, y: 250 },
     bounds: { minX: 620, minY: 115, maxX: 790, maxY: 490 },
     items: ALL_CARD_ITEMS.filter(item => item.countryId === 'fi')
   },

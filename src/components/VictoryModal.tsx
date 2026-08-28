@@ -14,6 +14,9 @@ interface VictoryModalProps {
   durationSeconds: number;
   placedItems: Record<CountryId, CardItem[]>;
   vehicleType?: VehicleType;
+  captainName?: string;
+  captainSquad?: string;
+  captainAvatar?: string;
   onRestart: () => void;
   onOpenStudyGuide: () => void;
 }
@@ -26,6 +29,9 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   durationSeconds,
   placedItems,
   vehicleType = 'airplane',
+  captainName,
+  captainSquad,
+  captainAvatar = '🛡️',
   onRestart,
   onOpenStudyGuide,
 }) => {
@@ -115,9 +121,16 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           <h2 className="font-viking text-2xl md:text-3xl font-extrabold text-[#c9a86a] tracking-wider uppercase">
             Győzelem! Észak-Európa meghódítva!
           </h2>
-          <p className="text-sm text-[#8e8e8e] font-serif italic mt-1">
-            Mind a 20 földrajzi rakomány sikeresen megérkezett a rendeltetési helyére!
-          </p>
+          {captainName ? (
+            <p className="text-sm text-[#e0d7cc] font-serif mt-1">
+              Gratulálunk, <strong className="text-[#c9a86a] font-viking">{captainName}</strong> kapitány
+              {captainSquad && <span className="text-[#8e8e8e]"> ({captainSquad} tagozat)</span>}! Mind a 20 földrajzi rakomány sikeresen megérkezett a rendeltetési helyére!
+            </p>
+          ) : (
+            <p className="text-sm text-[#8e8e8e] font-serif italic mt-1">
+              Mind a 20 földrajzi rakomány sikeresen megérkezett a rendeltetési helyére!
+            </p>
+          )}
 
           {/* Hungarian Grade Badge */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-4">

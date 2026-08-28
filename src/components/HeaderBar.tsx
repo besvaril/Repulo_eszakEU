@@ -9,6 +9,9 @@ interface HeaderBarProps {
   streak: number;
   isMuted: boolean;
   vehicleType: VehicleType;
+  captainName?: string;
+  captainSquad?: string;
+  captainAvatar?: string;
   onToggleMute: () => void;
   onOpenStudyGuide: () => void;
   onOpenVehicleSelect: () => void;
@@ -22,6 +25,9 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
   streak,
   isMuted,
   vehicleType,
+  captainName,
+  captainSquad,
+  captainAvatar = '🛡️',
   onToggleMute,
   onOpenStudyGuide,
   onOpenVehicleSelect,
@@ -33,24 +39,31 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
   return (
     <header className="w-full bg-[#1c1e22]/95 border-b-2 border-[#3d3329] backdrop-blur-md sticky top-0 z-30 shadow-2xl">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         
-        {/* Brand Title with Viking Shield Motif */}
-        <div className="flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-[#c9a86a] border-2 border-[#8e7345] flex items-center justify-center text-2xl shadow-lg shrink-0 text-[#121417]">
-            🛡️
+        {/* Brand Title with Viking Shield Motif & Captain Profile */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#c9a86a] border-2 border-[#8e7345] flex items-center justify-center text-xl sm:text-2xl shadow-lg shrink-0 text-[#121417]">
+            {captainAvatar}
           </div>
           <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="font-viking text-base md:text-xl font-bold text-[#c9a86a] tracking-widest uppercase">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-viking text-sm sm:text-lg font-bold text-[#c9a86a] tracking-widest uppercase">
                 Észak-Európa Kaland
               </h1>
-              <span className="text-[11px] font-sans font-bold bg-[#2c241d] text-[#c9a86a] border border-[#3d3329] px-2.5 py-0.5 rounded-full">
-                7. osztály
-              </span>
+              {captainName ? (
+                <span className="text-[11px] font-sans font-bold bg-[#2c241d] text-[#e0d7cc] border border-[#c9a86a]/50 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="text-[#c9a86a] font-viking">Kapitány:</span> {captainName}
+                  {captainSquad && <span className="text-[#8e8e8e]">({captainSquad})</span>}
+                </span>
+              ) : (
+                <span className="text-[11px] font-sans font-bold bg-[#2c241d] text-[#c9a86a] border border-[#3d3329] px-2.5 py-0.5 rounded-full">
+                  7. osztály
+                </span>
+              )}
             </div>
-            <p className="text-xs text-[#8e8e8e] italic font-rune hidden sm:block">
-              Vikingek és trollok földje • 🇩🇰 Dánia • 🇳🇴 Norvégia • 🇸🇪 Svédország • 🇫🇮 Finnország • 🇮🇸 Izland
+            <p className="text-xs text-[#8e8e8e] italic font-rune hidden md:block">
+              🇩🇰 Dánia • 🇳🇴 Norvégia • 🇸🇪 Svédország • 🇫🇮 Finnország • 🇮🇸 Izland
             </p>
           </div>
         </div>

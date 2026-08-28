@@ -12,19 +12,24 @@ interface NordicMapProps {
   onInspectCountry: (countryId: CountryId) => void;
   lastDroppedCountry: CountryId | null;
   isErrorAnimation: boolean;
+  cargoSlot?: React.ReactNode;
 }
 
 export const NordicMap: React.FC<NordicMapProps> = ({
   placedItems,
-  activeCard,
+  activeCard: _activeCard,
   onDropOnCountry,
   onCountryClick,
   onInspectCountry,
   lastDroppedCountry,
   isErrorAnimation,
+  cargoSlot,
 }) => {
   const [hoveredCountry, setHoveredCountry] = useState<CountryId | null>(null);
   const [dragOverCountry, setDragOverCountry] = useState<CountryId | null>(null);
+
+  // SVG coordinate configuration - shifted left by 75px to leave unobstructed room on the right
+  const MAP_VIEWBOX = { minX: 75, minY: 0, width: 900, height: 760 };
 
   const countryKeys: CountryId[] = ['is', 'no', 'se', 'fi', 'dk'];
 
@@ -44,7 +49,7 @@ export const NordicMap: React.FC<NordicMapProps> = ({
   };
 
   return (
-    <div className="w-full relative bg-[#1c1e22] rounded-3xl border-2 border-[#3d3329] p-3 md:p-6 shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden">
+    <div className="w-full relative bg-[#1c1e22] rounded-3xl border-2 border-[#3d3329] p-2.5 sm:p-3.5 md:p-4 shadow-[0_12px_35px_rgba(0,0,0,0.9)] overflow-hidden">
       
       {/* Decorative Runic & Wooden Frame Corners */}
       <div className="absolute top-2 left-3 text-[#c9a86a]/40 font-rune text-sm">ᚠ ᚢ ᚦ ᚨ</div>
@@ -57,25 +62,25 @@ export const NordicMap: React.FC<NordicMapProps> = ({
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#c9a86a]/10 via-[#1c1e22]/20 to-transparent -z-10 animate-aurora" />
 
       {/* Header bar over map */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-[#3d3329]">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-1.5 border-b border-[#3d3329]">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-[#c9a86a]" />
-          <h2 className="font-viking text-base md:text-lg font-bold text-[#c9a86a] tracking-widest uppercase">
+          <Shield className="w-4 h-4 text-[#c9a86a]" />
+          <h2 className="font-viking text-sm sm:text-base md:text-lg font-bold text-[#c9a86a] tracking-widest uppercase">
             Észak-Európa térképe (5 ország)
           </h2>
         </div>
         <div className="flex items-center gap-2 text-xs text-[#8e8e8e]">
           <span className="hidden sm:inline text-[#8e8e8e]">Tipp:</span>
-          <span className="bg-[#121417] px-3 py-1 rounded-lg border border-[#3d3329] text-[#c9a86a] font-medium">
+          <span className="bg-[#121417] px-2.5 py-0.5 rounded-lg border border-[#3d3329] text-[#c9a86a] font-medium text-[11px] sm:text-xs">
             Húzd a kártyát vagy kattints az országra!
           </span>
         </div>
       </div>
 
       {/* Primary SVG Northern Europe Map */}
-      <div className="relative w-full aspect-[4/3] max-h-[560px] flex items-center justify-center">
+      <div className="relative w-full aspect-[4/3] max-h-[460px] md:max-h-[500px] flex items-center justify-center">
         <svg
-          viewBox="0 0 900 760"
+          viewBox={`${MAP_VIEWBOX.minX} ${MAP_VIEWBOX.minY} ${MAP_VIEWBOX.width} ${MAP_VIEWBOX.height}`}
           className="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] select-none"
         >
           {/* Subtle Grid / Latitudes */}
@@ -108,32 +113,32 @@ export const NordicMap: React.FC<NordicMapProps> = ({
             </pattern>
           </defs>
 
-          {/* Sea background with subtle wave lines */}
-          <rect width="900" height="760" fill="url(#sea-waves)" />
+          {/* Sea background with subtle wave lines covering entire translated width */}
+          <rect x="0" y="0" width="1050" height="760" fill="url(#sea-waves)" />
 
           {/* Ocean Water Labels (Educational for 7th grade) */}
           <g className="font-rune text-[13px] fill-[#8e8e8e]/50 select-none pointer-events-none">
-            <text x="70" y="110" className="tracking-widest">ATLANTI-ÓCEÁN</text>
+            <text x="90" y="110" className="tracking-widest">ATLANTI-ÓCEÁN</text>
             <text x="320" y="180" className="tracking-widest">NORVÉG-TENGER</text>
-            <text x="250" y="580" className="tracking-widest">ÉSZAKI-TENGER</text>
-            <text x="600" y="590" className="tracking-widest">BALTI-TENGER</text>
-            <text x="690" y="470" className="tracking-wider text-[11px]">Finn-öböl</text>
-            <text x="590" y="320" className="tracking-wider text-[11px] rotate-[-75deg]">Botteni-öböl</text>
+            <text x="240" y="580" className="tracking-widest">ÉSZAKI-TENGER</text>
+            <text x="560" y="590" className="tracking-widest">BALTI-TENGER</text>
+            <text x="680" y="470" className="tracking-wider text-[11px]">Finn-öböl</text>
+            <text x="580" y="320" className="tracking-wider text-[11px] rotate-[-75deg]">Botteni-öböl</text>
           </g>
 
           {/* Arctic Circle Line (Északi-sarkkör 66.5° É) */}
           <g className="pointer-events-none">
             <line
-              x1="50"
+              x1="0"
               y1="230"
-              x2="850"
+              x2="1050"
               y2="210"
               stroke="#c9a86a"
               strokeWidth="1.5"
               strokeDasharray="6 6"
               strokeOpacity="0.4"
             />
-            <text x="60" y="222" fill="#c9a86a" fillOpacity="0.75" fontSize="11" fontFamily="sans-serif">
+            <text x="80" y="222" fill="#c9a86a" fillOpacity="0.75" fontSize="11" fontFamily="sans-serif">
               ✦ Északi-sarkkör (66,5° É)
             </text>
           </g>
@@ -286,8 +291,8 @@ export const NordicMap: React.FC<NordicMapProps> = ({
           const isTarget = hoveredCountry === cId || dragOverCountry === cId;
 
           // Position style on top of map container based on country badge coordinates
-          const leftPercent = (country.badgePos.x / 900) * 100;
-          const topPercent = (country.badgePos.y / 760) * 100;
+          const leftPercent = ((country.badgePos.x - MAP_VIEWBOX.minX) / MAP_VIEWBOX.width) * 100;
+          const topPercent = ((country.badgePos.y - MAP_VIEWBOX.minY) / MAP_VIEWBOX.height) * 100;
 
           return (
             <div
@@ -373,6 +378,13 @@ export const NordicMap: React.FC<NordicMapProps> = ({
             </div>
           );
         })}
+
+        {/* ✈️ / ⛵ / 🎈 Bottom-Right Cargo Vehicle & Question Card Overlay */}
+        {cargoSlot && (
+          <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 md:bottom-4 md:right-4 z-30 pointer-events-auto w-[270px] sm:w-[300px] md:w-[330px] max-w-[92vw]">
+            {cargoSlot}
+          </div>
+        )}
       </div>
 
       {/* Map Legend / Country Fast Selector Bar */}

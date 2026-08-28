@@ -16,6 +16,7 @@ import { StudyGuideModal } from './components/StudyGuideModal';
 import { CountryDetailsModal } from './components/CountryDetailsModal';
 import { VictoryModal } from './components/VictoryModal';
 import { VehicleSelectModal } from './components/VehicleSelectModal';
+import { CaptainEntryScreen } from './components/CaptainEntryScreen';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -28,9 +29,17 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default function App() {
-  // Vehicle selection state (opens at start of the game)
+  // App navigation stage: 'entry' (Captain Welcome & Inputs) -> 'vehicle_select' (Vehicle Selection) -> 'game' (Interactive Map Game)
+  const [appStage, setAppStage] = useState<'entry' | 'vehicle_select' | 'game'>('entry');
+
+  // Captain profile state
+  const [captainName, setCaptainName] = useState<string>('');
+  const [captainSquad, setCaptainSquad] = useState<string>('');
+  const [captainAvatar, setCaptainAvatar] = useState<string>('🛡️');
+
+  // Vehicle selection state
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('airplane');
-  const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(true);
+  const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [hasStartedGame, setHasStartedGame] = useState<boolean>(false);
 
   // Game state
@@ -58,7 +67,7 @@ export default function App() {
   // Mascot dialogue state
   const [mascotMessage, setMascotMessage] = useState<MascotMessage>({
     speaker: 'viking',
-    text: 'Üdvözöllek, ifjú vándor! Válaszd ki a szállítójárművedet, majd húzd a rakományokat a megfelelő északi országra a térképen!',
+    text: 'Üdvözöllek a fedélzeten, ifjú kapitány! Húzd a rakományokat a megfelelő északi országra a térképen!',
     mood: 'neutral',
     id: 1,
   });
@@ -79,25 +88,34 @@ export default function App() {
 
   // Sound whoosh on card flight
   useEffect(() => {
-    if (currentCard && !isCompleted && hasStartedGame) {
+    if (currentCard && !isCompleted && hasStartedGame && appStage === 'game') {
       soundEngine.playPlaneWhoosh();
     }
-  }, [currentCardIndex, isCompleted, hasStartedGame]);
+  }, [currentCardIndex, isCompleted, hasStartedGame, appStage]);
 
   // Timer interval
   useEffect(() => {
-    if (isCompleted || !hasStartedGame) return;
+    if (isCompleted || !hasStartedGame || appStage !== 'game') return;
     const interval = setInterval(() => {
       setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000));
     }, 1000);
     return () => clearInterval(interval);
-  }, [startTime, isCompleted, hasStartedGame]);
+  }, [startTime, isCompleted, hasStartedGame, appStage]);
 
-  // Handle vehicle confirmation
+  // Transition 1: From Captain Entry -> Vehicle Selection
+  const handleProceedToVehicleSelect = (name: string, squad: string, avatar: string) => {
+    setCaptainName(name);
+    setCaptainSquad(squad);
+    setCaptainAvatar(avatar);
+    setAppStage('vehicle_select');
+  };
+
+  // Transition 2: From Vehicle Selection -> Launch Game
   const handleConfirmVehicle = (veh: VehicleType) => {
     setSelectedVehicle(veh);
     setIsVehicleModalOpen(false);
     setHasStartedGame(true);
+    setAppStage('game');
     setStartTime(Date.now());
 
     // Start atmospheric Nordic background music: Vargsången (The Wolf Song)
@@ -106,7 +124,7 @@ export default function App() {
     const vehicleObj = VEHICLES[veh];
     setMascotMessage({
       speaker: 'viking',
-      text: `Kiváló választás: a ${vehicleObj.name}! Húzd a rakományt vagy kattints rá, majd válaszd ki a megfelelő észak-európai országot!`,
+      text: `Üdv a fedélzeten, ${captainName || 'ifjú'} kapitány! A(z) ${vehicleObj.name} készen áll. Húzd a rakományt vagy kattints rá, majd válaszd ki a megfelelő észak-európai országot!`,
       mood: 'excited',
       id: Date.now(),
     });
@@ -225,13 +243,19 @@ export default function App() {
     setDraggedCard(null);
     setLastDroppedCountry(null);
     setActiveCurriculumFact(null);
-    setIsVehicleModalOpen(true);
+    setIsVehicleModalOpen(false);
     setMascotMessage({
       speaker: 'viking',
-      text: 'Új északi expedíció indult! Válassz járművet az induláshoz!',
+      text: `Új északi expedíció indult ${captainName ? captainName + ' kapitánnyal' : ''}! Húzd a rakományt a megfelelő északi országra!`,
       mood: 'neutral',
       id: Date.now(),
     });
+  };
+
+  // Full reset back to entry screen
+  const handleFullReset = () => {
+    handleRestart();
+    setAppStage('entry');
   };
 
   // Hint button
@@ -251,6 +275,41 @@ export default function App() {
     0
   );
 
+  // 1️⃣ First Screen: Captain Entry Screen
+  if (appStage === 'entry') {
+    return (
+      <CaptainEntryScreen
+        onProceedToVehicleSelect={handleProceedToVehicleSelect}
+        initialName={captainName}
+        initialSquad={captainSquad}
+        initialAvatar={captainAvatar}
+      />
+    );
+  }
+
+  // 2️⃣ Second Screen: Vehicle Selection Screen (Before Game Launch)
+  if (appStage === 'vehicle_select') {
+    return (
+      <div className="min-h-screen w-full bg-[#121417] text-[#e0d7cc] flex flex-col font-body selection:bg-[#c9a86a]/30 selection:text-[#d4b984]">
+        {/* Background Entry Aura */}
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#c9a86a]/15 via-[#1c1e22]/50 to-[#121417] -z-10 animate-aurora" />
+
+        <VehicleSelectModal
+          isOpen={true}
+          selectedVehicle={selectedVehicle}
+          captainName={captainName}
+          captainSquad={captainSquad}
+          captainAvatar={captainAvatar}
+          onSelectVehicle={(veh) => setSelectedVehicle(veh)}
+          onStartGame={() => handleConfirmVehicle(selectedVehicle)}
+          onBackToEntry={() => setAppStage('entry')}
+          isInitialStart={true}
+        />
+      </div>
+    );
+  }
+
+  // 3️⃣ Main Screen: Interactive Northern Europe Game
   return (
     <div className="min-h-screen w-full bg-[#121417] text-[#e0d7cc] flex flex-col font-body selection:bg-[#c9a86a]/30 selection:text-[#d4b984]">
       
@@ -262,6 +321,9 @@ export default function App() {
         streak={streak}
         isMuted={isMuted}
         vehicleType={selectedVehicle}
+        captainName={captainName}
+        captainSquad={captainSquad}
+        captainAvatar={captainAvatar}
         onToggleMute={handleToggleMute}
         onOpenStudyGuide={() => setIsStudyGuideOpen(true)}
         onOpenVehicleSelect={() => setIsVehicleModalOpen(true)}
@@ -269,35 +331,9 @@ export default function App() {
       />
 
       {/* Main Game Stage */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-col gap-3 md:gap-4">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-4 py-1 flex flex-col gap-1 sm:gap-2">
         
-        {/* ✈️ / ⛵ / 🎈 VEHICLE CARGO TOWING STRIP */}
-        <VikingPlane
-          currentCard={currentCard}
-          cardIndex={currentCardIndex}
-          totalCards={ALL_CARD_ITEMS.length}
-          vehicleType={selectedVehicle}
-          onDragStart={(card) => {
-            setDraggedCard(card);
-            soundEngine.playCardSnap();
-          }}
-          onDragEnd={() => setDraggedCard(null)}
-          onCardSelect={(card) => {
-            setSelectedCard((prev) => (prev?.id === card.id ? null : card));
-            soundEngine.playCardSnap();
-          }}
-          isSelected={selectedCard?.id === currentCard?.id}
-          onShowHint={handleShowHint}
-          onChangeVehicle={() => setIsVehicleModalOpen(true)}
-        />
-
-        {/* 🧌 MASCOT DIALOGUE / FEEDBACK BOX */}
-        <VikingTrollDialogue
-          message={mascotMessage}
-          curriculumFact={activeCurriculumFact}
-        />
-
-        {/* 🗺️ INTERACTIVE NORTHERN EUROPE MAP */}
+        {/* 🗺️ INTERACTIVE NORTHERN EUROPE MAP WITH DOCKED BOTTOM-RIGHT CARGO STRIP */}
         <NordicMap
           placedItems={placedItems}
           activeCard={selectedCard || currentCard}
@@ -306,6 +342,32 @@ export default function App() {
           onInspectCountry={(countryId) => setInspectingCountry(COUNTRIES[countryId])}
           lastDroppedCountry={lastDroppedCountry}
           isErrorAnimation={isErrorAnimation}
+          cargoSlot={
+            <VikingPlane
+              currentCard={currentCard}
+              cardIndex={currentCardIndex}
+              totalCards={ALL_CARD_ITEMS.length}
+              vehicleType={selectedVehicle}
+              onDragStart={(card) => {
+                setDraggedCard(card);
+                soundEngine.playCardSnap();
+              }}
+              onDragEnd={() => setDraggedCard(null)}
+              onCardSelect={(card) => {
+                setSelectedCard((prev) => (prev?.id === card.id ? null : card));
+                soundEngine.playCardSnap();
+              }}
+              isSelected={selectedCard?.id === currentCard?.id}
+              onShowHint={handleShowHint}
+              onChangeVehicle={() => setIsVehicleModalOpen(true)}
+            />
+          }
+        />
+
+        {/* 🧌 MASCOT DIALOGUE / FEEDBACK BOX (BELOW MAP) */}
+        <VikingTrollDialogue
+          message={mascotMessage}
+          curriculumFact={activeCurriculumFact}
         />
 
         {/* 📜 7th Grade Summary Banner (At bottom of viewport) */}
@@ -314,23 +376,43 @@ export default function App() {
             <span className="text-[#c9a86a] font-bold font-viking">Észak-Európa országai:</span>
             <span className="text-[#e0d7cc]/90">🇩🇰 Dánia • 🇳🇴 Norvégia • 🇸🇪 Svédország • 🇫🇮 Finnország • 🇮🇸 Izland</span>
           </div>
-          <button
-            onClick={() => setIsStudyGuideOpen(true)}
-            className="text-[#c9a86a] hover:text-[#d4b984] underline font-semibold cursor-pointer transition-colors"
-          >
-            Nézd meg mind a 20 földrajzi fogalmat a tanulókódexben →
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleFullReset}
+              className="text-[#8e8e8e] hover:text-[#c9a86a] text-xs transition-colors cursor-pointer"
+            >
+              Kapitányváltás / Belépés
+            </button>
+            <button
+              onClick={() => setIsStudyGuideOpen(true)}
+              className="text-[#c9a86a] hover:text-[#d4b984] underline font-semibold cursor-pointer transition-colors"
+            >
+              Nézd meg mind a 20 földrajzi fogalmat a tanulókódexben →
+            </button>
+          </div>
         </footer>
 
       </main>
 
-      {/* 🚀 Vehicle Selection Modal (At start & on demand) */}
+      {/* 🚀 In-Game Vehicle Selection Modal (On demand) */}
       <VehicleSelectModal
         isOpen={isVehicleModalOpen}
         selectedVehicle={selectedVehicle}
+        captainName={captainName}
+        captainSquad={captainSquad}
+        captainAvatar={captainAvatar}
         onSelectVehicle={(veh) => setSelectedVehicle(veh)}
-        onStartGame={() => handleConfirmVehicle(selectedVehicle)}
-        isInitialStart={!hasStartedGame}
+        onStartGame={() => {
+          setIsVehicleModalOpen(false);
+          const vehicleObj = VEHICLES[selectedVehicle];
+          setMascotMessage({
+            speaker: 'viking',
+            text: `A(z) ${vehicleObj.name} bevetésre kész! Folytasd az expedíciót!`,
+            mood: 'happy',
+            id: Date.now(),
+          });
+        }}
+        isInitialStart={false}
       />
 
       {/* 📚 Study Guide Modal */}
@@ -356,7 +438,10 @@ export default function App() {
         durationSeconds={elapsedSeconds}
         placedItems={placedItems}
         vehicleType={selectedVehicle}
-        onRestart={handleRestart}
+        captainName={captainName}
+        captainSquad={captainSquad}
+        captainAvatar={captainAvatar}
+        onRestart={handleFullReset}
         onOpenStudyGuide={() => {
           setIsStudyGuideOpen(true);
         }}
