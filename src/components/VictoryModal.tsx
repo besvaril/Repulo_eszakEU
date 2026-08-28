@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
-import { Trophy, RotateCcw, BookOpen, Flame, Award, CheckCircle2, Shield, Compass } from 'lucide-react';
+import { Trophy, RotateCcw, BookOpen, Flame, Award, CheckCircle2, Shield, Compass, Database, Check, Loader2 } from 'lucide-react';
 import { COUNTRIES } from '../data/countriesData';
 import { CountryId, CardItem } from '../types';
 import { VehicleType, VEHICLES } from '../data/vehiclesData';
+import { saveExpeditionResult, isSupabaseConfigured, SUPABASE_TABLES } from '../lib/supabase';
 
 interface VictoryModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface VictoryModalProps {
   captainAvatar?: string;
   onRestart: () => void;
   onOpenStudyGuide: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
 export const VictoryModal: React.FC<VictoryModalProps> = ({
@@ -34,8 +36,10 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   captainAvatar = '🛡️',
   onRestart,
   onOpenStudyGuide,
+  onOpenLeaderboard,
 }) => {
   const currentVehicle = VEHICLES[vehicleType] || VEHICLES.airplane;
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'local'>('idle');
 
   useEffect(() => {
     if (isOpen) {
@@ -62,9 +66,37 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         });
       }, 1400);
 
+      // Auto-save result to Supabase EE_game_results table
+      const accuracyCalc = Math.max(0, Math.round((20 / (20 + mistakes)) * 100));
+      let calculatedGrade = '5';
+      if (mistakes === 0) calculatedGrade = '5*';
+      else if (mistakes <= 2) calculatedGrade = '5';
+      else if (mistakes <= 5) calculatedGrade = '4';
+      else if (mistakes <= 8) calculatedGrade = '3';
+      else calculatedGrade = '2';
+
+      setSaveStatus('saving');
+      saveExpeditionResult({
+        captain_name: captainName || 'Névtelen Kapitány',
+        squad: captainSquad || '7.a',
+        accuracy: accuracyCalc,
+        elapsed_seconds: durationSeconds,
+        final_score: score,
+        grade: calculatedGrade,
+        mistakes,
+        vehicle: vehicleType,
+        avatar: captainAvatar,
+      }).then((res) => {
+        if (res.success && !res.isLocalFallback) {
+          setSaveStatus('saved');
+        } else {
+          setSaveStatus('local');
+        }
+      });
+
       return () => clearInterval(interval);
     }
-  }, [isOpen]);
+  }, [isOpen, score, mistakes, durationSeconds, captainName, captainSquad, vehicleType, captainAvatar]);
 
   if (!isOpen) return null;
 
@@ -182,6 +214,34 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           </div>
         </div>
 
+        {/* Database Save Status Banner */}
+        <div className="px-5 py-2.5 bg-[#16181d] border-b border-[#3d3329] flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <Database className="w-4 h-4 text-[#c9a86a]" />
+            <span className="text-[#8e8e8e]">
+              Supabase tábla: <strong className="text-[#e0d7cc] font-mono">{SUPABASE_TABLES.GAME_RESULTS}</strong>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {saveStatus === 'saving' && (
+              <span className="text-[#d4b984] flex items-center gap-1.5 font-sans">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Eredmény mentése...
+              </span>
+            )}
+            {saveStatus === 'saved' && (
+              <span className="text-emerald-400 flex items-center gap-1.5 font-sans font-bold">
+                <Check className="w-3.5 h-3.5" /> Sikeresen rögzítve a Supabase-ben!
+              </span>
+            )}
+            {saveStatus === 'local' && (
+              <span className="text-[#d4b984] flex items-center gap-1.5 font-sans">
+                <Check className="w-3.5 h-3.5" /> Helyi hajónaplóban tárolva
+              </span>
+            )}
+          </div>
+        </div>
+
         {/* Completed 5 Countries Overview Summary */}
         <div className="p-5 max-h-[35vh] overflow-y-auto space-y-2 bg-[#121417]">
           <h3 className="font-viking text-xs font-bold text-[#c9a86a] tracking-widest uppercase mb-2">
@@ -226,13 +286,25 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
         {/* Modal Action Buttons */}
         <div className="p-4 md:p-5 border-t border-[#3d3329] bg-[#1c1e22] flex flex-wrap items-center justify-between gap-3">
-          <button
-            onClick={onOpenStudyGuide}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#121417] hover:bg-[#2c241d] border border-[#3d3329] text-[#8e8e8e] hover:text-[#c9a86a] font-semibold text-xs transition-colors"
-          >
-            <BookOpen className="w-4 h-4 text-[#c9a86a]" />
-            <span>Összes tananyag áttekintése</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={onOpenStudyGuide}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#121417] hover:bg-[#2c241d] border border-[#3d3329] text-[#8e8e8e] hover:text-[#c9a86a] font-semibold text-xs transition-colors"
+            >
+              <BookOpen className="w-4 h-4 text-[#c9a86a]" />
+              <span>Tananyag</span>
+            </button>
+
+            {onOpenLeaderboard && (
+              <button
+                onClick={onOpenLeaderboard}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#121417] hover:bg-[#2c241d] border border-[#8e7345] text-[#c9a86a] font-bold text-xs transition-colors"
+              >
+                <Trophy className="w-4 h-4 text-[#c9a86a]" />
+                <span>Dicsőségcsarnok & Supabase</span>
+              </button>
+            )}
+          </div>
 
           <button
             onClick={onRestart}

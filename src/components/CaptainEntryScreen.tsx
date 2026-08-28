@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Shield, Sparkles, User, GraduationCap, ArrowRight, Compass, MapPin, Award } from 'lucide-react';
+import { Shield, Sparkles, User, GraduationCap, ArrowRight, Compass, MapPin, Award, Trophy } from 'lucide-react';
 import { soundEngine } from '../utils/audio';
 
 interface CaptainEntryScreenProps {
   onProceedToVehicleSelect: (captainName: string, captainSquad: string, captainAvatar: string) => void;
+  onOpenLeaderboard?: () => void;
   initialName?: string;
   initialSquad?: string;
   initialAvatar?: string;
@@ -21,6 +22,7 @@ const AVATARS = [
 
 export const CaptainEntryScreen: React.FC<CaptainEntryScreenProps> = ({
   onProceedToVehicleSelect,
+  onOpenLeaderboard,
   initialName = '',
   initialSquad = '',
   initialAvatar = '🛡️',
@@ -220,14 +222,27 @@ export const CaptainEntryScreen: React.FC<CaptainEntryScreenProps> = ({
             </div>
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full mt-3 py-3.5 px-6 bg-gradient-to-r from-[#d4b984] via-[#c9a86a] to-[#8e7345] hover:brightness-110 active:scale-[0.98] text-[#121417] font-viking font-extrabold text-sm sm:text-base tracking-wider uppercase rounded-2xl shadow-[0_10px_25px_rgba(201,168,106,0.35)] flex items-center justify-center gap-2.5 transition-all cursor-pointer"
-          >
-            <span>Tovább a járműválasztáshoz</span>
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          {/* Submit Button & Leaderboard */}
+          <div className="space-y-2.5 pt-2">
+            <button
+              type="submit"
+              className="w-full py-3.5 px-6 bg-gradient-to-r from-[#d4b984] via-[#c9a86a] to-[#8e7345] hover:brightness-110 active:scale-[0.98] text-[#121417] font-viking font-extrabold text-sm sm:text-base tracking-wider uppercase rounded-2xl shadow-[0_10px_25px_rgba(201,168,106,0.35)] flex items-center justify-center gap-2.5 transition-all cursor-pointer"
+            >
+              <span>Tovább a járműválasztáshoz</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            {onOpenLeaderboard && (
+              <button
+                type="button"
+                onClick={onOpenLeaderboard}
+                className="w-full py-2.5 px-4 bg-[#121417] hover:bg-[#2c241d] border border-[#3d3329] hover:border-[#8e7345] text-[#8e8e8e] hover:text-[#c9a86a] text-xs font-viking uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer"
+              >
+                <Trophy className="w-4 h-4 text-[#c9a86a]" />
+                <span>Dicsőségcsarnok & Supabase Adatbázis</span>
+              </button>
+            )}
+          </div>
         </form>
       </motion.div>
 

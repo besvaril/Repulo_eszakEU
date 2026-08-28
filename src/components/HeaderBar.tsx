@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, BookOpen, RotateCcw, Flame, Award, Shield, Compass } from 'lucide-react';
+import { Volume2, VolumeX, BookOpen, RotateCcw, Flame, Award, Shield, Compass, Trophy } from 'lucide-react';
 import { VehicleType, VEHICLES } from '../data/vehiclesData';
 
 interface HeaderBarProps {
@@ -15,6 +15,7 @@ interface HeaderBarProps {
   onToggleMute: () => void;
   onOpenStudyGuide: () => void;
   onOpenVehicleSelect: () => void;
+  onOpenLeaderboard?: () => void;
   onRestart: () => void;
 }
 
@@ -31,6 +32,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
   onToggleMute,
   onOpenStudyGuide,
   onOpenVehicleSelect,
+  onOpenLeaderboard,
   onRestart,
 }) => {
   // Calculate current percentage
@@ -130,10 +132,22 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
 
+            {/* Leaderboard / Dicsőségcsarnok Button */}
+            {onOpenLeaderboard && (
+              <button
+                onClick={onOpenLeaderboard}
+                className="flex items-center gap-1.5 bg-[#2c241d] hover:bg-[#3d3329] border border-[#8e7345] text-[#c9a86a] px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+                title="Dicsőségcsarnok & Supabase Adatbázis (EE_game_results tábla)"
+              >
+                <Trophy className="w-4 h-4 text-[#c9a86a]" />
+                <span className="hidden sm:inline">Ranglista</span>
+              </button>
+            )}
+
             {/* Study Guide Button */}
             <button
               onClick={onOpenStudyGuide}
-              className="flex items-center gap-2 bg-[#c9a86a] hover:bg-[#d4b984] text-[#121417] px-3.5 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-95"
+              className="flex items-center gap-2 bg-[#c9a86a] hover:bg-[#d4b984] text-[#121417] px-3.5 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition-all shadow-md active:scale-95 cursor-pointer"
               title="7. osztályos összefoglaló tanulókártyák"
             >
               <BookOpen className="w-4 h-4 text-[#121417]" />

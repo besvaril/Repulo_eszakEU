@@ -1,6 +1,6 @@
 {
   "name": "Észak-Európa Viking Földrajzi Kvíz",
-  "description": "7. osztályos földrajz gyakorló feladat Észak-Európa 5 országáról viking és troll hangulatban, repülővel behúzott kártyákkal.",
+  "description": "7. osztályos földrajz gyakorló játék Észak-Európa országairól (Dánia, Norvégia, Svédország, Finnország, Izland) testreszabható járművekkel, kapitányi bejelentkezéssel és Supabase adatbázis (EE_game_results) integrációval.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

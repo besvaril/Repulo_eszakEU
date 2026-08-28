@@ -17,6 +17,7 @@ import { CountryDetailsModal } from './components/CountryDetailsModal';
 import { VictoryModal } from './components/VictoryModal';
 import { VehicleSelectModal } from './components/VehicleSelectModal';
 import { CaptainEntryScreen } from './components/CaptainEntryScreen';
+import { LeaderboardModal } from './components/LeaderboardModal';
 
 // Fisher-Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -82,6 +83,7 @@ export default function App() {
   // Modals state
   const [isStudyGuideOpen, setIsStudyGuideOpen] = useState<boolean>(false);
   const [inspectingCountry, setInspectingCountry] = useState<CountryInfo | null>(null);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
 
   // Current active card being towed by the vehicle
   const currentCard = currentCardIndex < deck.length ? deck[currentCardIndex] : null;
@@ -278,12 +280,19 @@ export default function App() {
   // 1️⃣ First Screen: Captain Entry Screen
   if (appStage === 'entry') {
     return (
-      <CaptainEntryScreen
-        onProceedToVehicleSelect={handleProceedToVehicleSelect}
-        initialName={captainName}
-        initialSquad={captainSquad}
-        initialAvatar={captainAvatar}
-      />
+      <>
+        <CaptainEntryScreen
+          onProceedToVehicleSelect={handleProceedToVehicleSelect}
+          onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+          initialName={captainName}
+          initialSquad={captainSquad}
+          initialAvatar={captainAvatar}
+        />
+        <LeaderboardModal
+          isOpen={isLeaderboardOpen}
+          onClose={() => setIsLeaderboardOpen(false)}
+        />
+      </>
     );
   }
 
@@ -304,6 +313,11 @@ export default function App() {
           onStartGame={() => handleConfirmVehicle(selectedVehicle)}
           onBackToEntry={() => setAppStage('entry')}
           isInitialStart={true}
+        />
+
+        <LeaderboardModal
+          isOpen={isLeaderboardOpen}
+          onClose={() => setIsLeaderboardOpen(false)}
         />
       </div>
     );
@@ -327,6 +341,7 @@ export default function App() {
         onToggleMute={handleToggleMute}
         onOpenStudyGuide={() => setIsStudyGuideOpen(true)}
         onOpenVehicleSelect={() => setIsVehicleModalOpen(true)}
+        onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
         onRestart={handleRestart}
       />
 
@@ -378,16 +393,24 @@ export default function App() {
           </div>
           <div className="flex items-center gap-3">
             <button
+              onClick={() => setIsLeaderboardOpen(true)}
+              className="text-[#c9a86a] hover:text-[#d4b984] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
+            >
+              🏆 Dicsőségcsarnok & Supabase
+            </button>
+            <span className="text-[#3d3329]">•</span>
+            <button
               onClick={handleFullReset}
               className="text-[#8e8e8e] hover:text-[#c9a86a] text-xs transition-colors cursor-pointer"
             >
-              Kapitányváltás / Belépés
+              Kapitányváltás
             </button>
+            <span className="text-[#3d3329]">•</span>
             <button
               onClick={() => setIsStudyGuideOpen(true)}
               className="text-[#c9a86a] hover:text-[#d4b984] underline font-semibold cursor-pointer transition-colors"
             >
-              Nézd meg mind a 20 földrajzi fogalmat a tanulókódexben →
+              20 földrajzi fogalom →
             </button>
           </div>
         </footer>
@@ -445,6 +468,15 @@ export default function App() {
         onOpenStudyGuide={() => {
           setIsStudyGuideOpen(true);
         }}
+        onOpenLeaderboard={() => {
+          setIsLeaderboardOpen(true);
+        }}
+      />
+
+      {/* 🏛️ Supabase Leaderboard & Schema Modal */}
+      <LeaderboardModal
+        isOpen={isLeaderboardOpen}
+        onClose={() => setIsLeaderboardOpen(false)}
       />
 
     </div>
