@@ -137,7 +137,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
               <button
                 onClick={onOpenLeaderboard}
                 className="flex items-center gap-1.5 bg-[#2c241d] hover:bg-[#3d3329] border border-[#8e7345] text-[#c9a86a] px-3 py-2 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-                title="Dicsőségcsarnok & Supabase Adatbázis (EE_game_results tábla)"
+                title="Dicsőségcsarnok - Ranglista"
               >
                 <Trophy className="w-4 h-4 text-[#c9a86a]" />
                 <span className="hidden sm:inline">Ranglista</span>

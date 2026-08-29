@@ -239,7 +239,7 @@ export const CaptainEntryScreen: React.FC<CaptainEntryScreenProps> = ({
                 className="w-full py-2.5 px-4 bg-[#121417] hover:bg-[#2c241d] border border-[#3d3329] hover:border-[#8e7345] text-[#8e8e8e] hover:text-[#c9a86a] text-xs font-viking uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <Trophy className="w-4 h-4 text-[#c9a86a]" />
-                <span>Dicsőségcsarnok & Supabase Adatbázis</span>
+                <span>Dicsőségcsarnok</span>
               </button>
             )}
           </div>

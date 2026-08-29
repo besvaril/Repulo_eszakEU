@@ -396,7 +396,7 @@ export default function App() {
               onClick={() => setIsLeaderboardOpen(true)}
               className="text-[#c9a86a] hover:text-[#d4b984] text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
             >
-              🏆 Dicsőségcsarnok & Supabase
+              🏆 Dicsőségcsarnok
             </button>
             <span className="text-[#3d3329]">•</span>
             <button

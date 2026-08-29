@@ -301,7 +301,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#121417] hover:bg-[#2c241d] border border-[#8e7345] text-[#c9a86a] font-bold text-xs transition-colors"
               >
                 <Trophy className="w-4 h-4 text-[#c9a86a]" />
-                <span>Dicsőségcsarnok & Supabase</span>
+                <span>Dicsőségcsarnok</span>
               </button>
             )}
           </div>
